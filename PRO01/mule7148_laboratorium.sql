@@ -26,9 +26,7 @@ CREATE TABLE IF NOT EXISTS `tbl_inbox` (
   CONSTRAINT `FK_kodepeminjam_user_inbox` FOREIGN KEY (`kodepeminjam_user`) REFERENCES `tbl_user` (`kodepeminjam_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table mule7148_laboratorium.tbl_inbox: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_inbox` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_inbox` ENABLE KEYS */;
+-- Data exporting was unselected.
 
 
 -- Dumping structure for table mule7148_laboratorium.tbl_inventaris
@@ -36,33 +34,44 @@ CREATE TABLE IF NOT EXISTS `tbl_inventaris` (
   `id_inventaris` int(11) NOT NULL AUTO_INCREMENT,
   `kode_inventaris` varchar(50) NOT NULL,
   `nama_inventaris` varchar(50) DEFAULT NULL,
-  `keterangan_inventaris` text DEFAULT NULL,
+  `id_kategori` int(11) DEFAULT NULL,
   `ketersediaan_inventaris` int(1) NOT NULL DEFAULT 1 COMMENT '0 = Tidak Tersedia, 1 = Tersedia',
   `created_inventaris` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_inventaris` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`id_inventaris`),
-  UNIQUE KEY `kode_inventaris` (`kode_inventaris`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+  UNIQUE KEY `kode_inventaris` (`kode_inventaris`),
+  KEY `FK_id_kategori_inventaris` (`id_kategori`),
+  CONSTRAINT `FK_id_kategori_inventaris` FOREIGN KEY (`id_kategori`) REFERENCES `tbl_kategori` (`id_kategori`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table mule7148_laboratorium.tbl_inventaris: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_inventaris` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_inventaris` ENABLE KEYS */;
+-- Data exporting was unselected.
 
 
 -- Dumping structure for table mule7148_laboratorium.tbl_jadwal
 CREATE TABLE IF NOT EXISTS `tbl_jadwal` (
   `id_jadwal` int(11) NOT NULL AUTO_INCREMENT,
   `kode_jadwal` varchar(50) NOT NULL,
-  `jam_jadwal` time NOT NULL,
+  `jam1_jadwal` time NOT NULL,
+  `jam2_jadwal` time NOT NULL,
   `created_jadwal` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_jadwal` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`id_jadwal`),
   UNIQUE KEY `kode_jadwal` (`kode_jadwal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table mule7148_laboratorium.tbl_jadwal: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_jadwal` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_jadwal` ENABLE KEYS */;
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table mule7148_laboratorium.tbl_kategori
+CREATE TABLE IF NOT EXISTS `tbl_kategori` (
+  `id_kategori` int(11) NOT NULL AUTO_INCREMENT,
+  `nama_kategori` varchar(50) NOT NULL,
+  `created_kategori` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_kategori` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id_kategori`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Data exporting was unselected.
 
 
 -- Dumping structure for table mule7148_laboratorium.tbl_peminjaman_inventaris
@@ -73,7 +82,8 @@ CREATE TABLE IF NOT EXISTS `tbl_peminjaman_inventaris` (
   `kodepeminjam_user` varchar(50) NOT NULL,
   `tanggal_peminjaman` datetime DEFAULT NULL,
   `tanggal_kembali` datetime DEFAULT NULL,
-  `status_peminjaman` int(1) NOT NULL DEFAULT 0,
+  `konfirmasi_peminjaman` int(1) NOT NULL DEFAULT 0,
+  `konfirmasi_kembali` int(1) NOT NULL DEFAULT 0,
   `created_peminjaman` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_peminjaman` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`id_peminjaman`),
@@ -84,9 +94,7 @@ CREATE TABLE IF NOT EXISTS `tbl_peminjaman_inventaris` (
   CONSTRAINT `FK_kodepeminjam_user` FOREIGN KEY (`kodepeminjam_user`) REFERENCES `tbl_user` (`kodepeminjam_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table mule7148_laboratorium.tbl_peminjaman_inventaris: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_peminjaman_inventaris` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_peminjaman_inventaris` ENABLE KEYS */;
+-- Data exporting was unselected.
 
 
 -- Dumping structure for table mule7148_laboratorium.tbl_peminjaman_ruangan
@@ -96,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `tbl_peminjaman_ruangan` (
   `kode_ruangan` varchar(50) NOT NULL,
   `kodepeminjam_user` varchar(50) NOT NULL,
   `kode_jadwal` varchar(50) NOT NULL,
-  `tanggal_peminjaman` datetime DEFAULT NULL,
+  `tanggal_peminjaman` date DEFAULT NULL,
   `status_peminjaman` int(1) NOT NULL DEFAULT 0,
   `created_peminjaman` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_peminjaman` datetime DEFAULT NULL ON UPDATE current_timestamp(),
@@ -110,9 +118,7 @@ CREATE TABLE IF NOT EXISTS `tbl_peminjaman_ruangan` (
   CONSTRAINT `tbl_peminjaman_ruangan_ibfk_3` FOREIGN KEY (`kode_jadwal`) REFERENCES `tbl_jadwal` (`kode_jadwal`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table mule7148_laboratorium.tbl_peminjaman_ruangan: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_peminjaman_ruangan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_peminjaman_ruangan` ENABLE KEYS */;
+-- Data exporting was unselected.
 
 
 -- Dumping structure for table mule7148_laboratorium.tbl_ruangan
@@ -127,35 +133,32 @@ CREATE TABLE IF NOT EXISTS `tbl_ruangan` (
   UNIQUE KEY `kode_inventaris` (`kode_ruangan`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table mule7148_laboratorium.tbl_ruangan: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_ruangan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_ruangan` ENABLE KEYS */;
+-- Data exporting was unselected.
 
 
 -- Dumping structure for table mule7148_laboratorium.tbl_user
 CREATE TABLE IF NOT EXISTS `tbl_user` (
   `id_user` int(11) NOT NULL AUTO_INCREMENT,
   `kodepeminjam_user` varchar(50) NOT NULL COMMENT 'nim,nidn',
-  `level_user` varchar(50) NOT NULL COMMENT 'admin,mahasiswa,dosen',
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL,
+  `level_user` varchar(50) NOT NULL COMMENT 'administrator,mahasiswa,dosen',
+  `user_name` varchar(50) DEFAULT NULL,
+  `user_password` varchar(50) DEFAULT NULL,
   `nama_user` varchar(50) DEFAULT NULL,
   `tempatlahir_user` varchar(50) DEFAULT NULL,
   `tanggallahir_user` date DEFAULT NULL,
   `notelp_user` varchar(15) DEFAULT NULL,
   `alamat_user` text DEFAULT NULL,
-  `foto_user` varchar(50) DEFAULT NULL,
-  `sangsipeminjaman_user` int(11) DEFAULT NULL,
+  `foto_user` varchar(50) NOT NULL DEFAULT 'default/user.png',
+  `sangsipeminjaman_user` int(11) NOT NULL DEFAULT 0,
   `tanggalsangsi_user` datetime DEFAULT NULL,
   `created_user` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_user` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`id_user`),
-  UNIQUE KEY `kode_inventaris` (`kodepeminjam_user`)
+  UNIQUE KEY `kode_inventaris` (`kodepeminjam_user`),
+  UNIQUE KEY `user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
--- Dumping data for table mule7148_laboratorium.tbl_user: ~0 rows (approximately)
-/*!40000 ALTER TABLE `tbl_user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tbl_user` ENABLE KEYS */;
+-- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
