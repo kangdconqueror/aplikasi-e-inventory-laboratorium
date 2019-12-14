@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `tbl_inbox` (
   `id_inbox` int(11) NOT NULL AUTO_INCREMENT,
   `isi_inbox` text NOT NULL,
   `kodepeminjam_user` varchar(50) NOT NULL,
-  `created_user` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_inbox` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_inbox`),
   KEY `FK_kodepeminjam_user_inbox` (`kodepeminjam_user`),
   CONSTRAINT `FK_kodepeminjam_user_inbox` FOREIGN KEY (`kodepeminjam_user`) REFERENCES `tbl_user` (`kodepeminjam_user`) ON DELETE CASCADE ON UPDATE CASCADE

@@ -153,6 +153,7 @@ echo $tahun;
   $DataUserMahasiswa = "";
   $DataUserDosen = "";
   $DataUserAdmin = "";
+  $Laporan = "";
   
   if($geturl=="" or strpos($geturl, "index")!== FALSE){
 	  $beranda = "active";
@@ -177,6 +178,9 @@ echo $tahun;
   }
   if(strpos($geturl, "administrator")!== FALSE){
 	  $DataUserAdmin = "active";
+  }
+  if(strpos($geturl, "laporan")!== FALSE){
+	  $Laporan = "active";
   }
   
   ?>
@@ -221,6 +225,11 @@ echo $tahun;
 		<li class="<?php echo $DataUserAdmin;?>">
           <a href="<?php echo base_url(); ?>admin/administrator">
             <span>Data User - Admin</span>
+          </a>
+        </li>
+		<li class="<?php echo $Laporan;?>">
+          <a href="<?php echo base_url(); ?>admin/laporan">
+            <span>Laporan</span>
           </a>
         </li>
 		<li class="">

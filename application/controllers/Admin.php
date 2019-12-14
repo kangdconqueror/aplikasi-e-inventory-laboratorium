@@ -515,7 +515,16 @@ class Admin extends CI_Controller {
 	public function get_data_master_mahasiswa($sortir = "")
 	{
 		if($sortir=="sortir"){
-			$where = "and sangsipeminjaman_user>0";
+			$where = "and sangsipeminjaman_user>0 AND 
+(CASE WHEN (UNIX_TIMESTAMP(DATE_ADD(tanggalsangsi_user, INTERVAL (CASE
+	WHEN sangsipeminjaman_user=0 THEN '0'
+	WHEN sangsipeminjaman_user=1 THEN '3'
+	WHEN sangsipeminjaman_user=2 THEN '7'
+	WHEN sangsipeminjaman_user=3 THEN '30'
+	WHEN sangsipeminjaman_user=4 THEN '90'
+	WHEN sangsipeminjaman_user=5 THEN '100'
+END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
+      ELSE 1 END)=1";
 		}else{
 			$where = "";
 		}
@@ -718,7 +727,16 @@ class Admin extends CI_Controller {
 	public function get_data_master_administrator($sortir = "")
 	{
 		if($sortir=="sortir"){
-			$where = "and sangsipeminjaman_user>0";
+			$where = "and sangsipeminjaman_user>0 AND 
+(CASE WHEN (UNIX_TIMESTAMP(DATE_ADD(tanggalsangsi_user, INTERVAL (CASE
+	WHEN sangsipeminjaman_user=0 THEN '0'
+	WHEN sangsipeminjaman_user=1 THEN '3'
+	WHEN sangsipeminjaman_user=2 THEN '7'
+	WHEN sangsipeminjaman_user=3 THEN '30'
+	WHEN sangsipeminjaman_user=4 THEN '90'
+	WHEN sangsipeminjaman_user=5 THEN '100'
+END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
+      ELSE 1 END)=1";
 		}else{
 			$where = "";
 		}
@@ -920,7 +938,16 @@ class Admin extends CI_Controller {
 	public function get_data_master_dosen($sortir = "")
 	{
 		if($sortir=="sortir"){
-			$where = "and sangsipeminjaman_user>0";
+			$where = "and sangsipeminjaman_user>0 AND 
+(CASE WHEN (UNIX_TIMESTAMP(DATE_ADD(tanggalsangsi_user, INTERVAL (CASE
+	WHEN sangsipeminjaman_user=0 THEN '0'
+	WHEN sangsipeminjaman_user=1 THEN '3'
+	WHEN sangsipeminjaman_user=2 THEN '7'
+	WHEN sangsipeminjaman_user=3 THEN '30'
+	WHEN sangsipeminjaman_user=4 THEN '90'
+	WHEN sangsipeminjaman_user=5 THEN '100'
+END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
+      ELSE 1 END)=1";
 		}else{
 			$where = "";
 		}
@@ -1337,4 +1364,39 @@ class Admin extends CI_Controller {
 			$this->m_general->hapus("tbl_peminjaman_ruangan", $where); // Panggil fungsi hapus() yang ada di m_general.php
 			redirect('admin/peminjamanruang/'.$tanggal_peminjaman);
 	}
+	
+	////////////////////////////////////
+	
+	public function laporan()
+    {
+		$this->load->view("v_admin_header");
+        $this->load->view("v_admin_laporan");
+        $this->load->view("v_admin_footer");
+    }
+	
+	public function get_data_master_inbox()
+	{
+		$table = "
+        (
+            SELECT * FROM tbl_inbox
+        )temp";
+		
+        $primaryKey = 'id_inbox';
+        $columns = array(
+        array( 'db' => 'created_inbox',     'dt' => 0 ),
+        array( 'db' => 'isi_inbox',     'dt' => 1 ),
+        array( 'db' => 'kodepeminjam_user',     'dt' => 2 ),
+        );
+
+        $sql_details = array(
+            'user' => $this->db->username,
+            'pass' => $this->db->password,
+            'db'   => $this->db->database,
+            'host' => $this->db->hostname
+        );
+        echo json_encode(
+            SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns)
+        );
+	}	
+	
 }
