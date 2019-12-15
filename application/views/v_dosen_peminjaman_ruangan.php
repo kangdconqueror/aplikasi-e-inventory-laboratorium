@@ -1,7 +1,49 @@
+<?php 
+if($this->uri->segment(3)!=""){
+	$date = $this->uri->segment(3);
+}else{
+	$date = date("Y-m-d");
+}
+$hari = date('l', strtotime($date));
+
+	switch($hari){
+		case 'Sunday':
+			$hari_ini = "Minggu";
+		break;
+ 
+		case 'Monday':			
+			$hari_ini = "Senin";
+		break;
+ 
+		case 'Tuesday':
+			$hari_ini = "Selasa";
+		break;
+ 
+		case 'Wednesday':
+			$hari_ini = "Rabu";
+		break;
+ 
+		case 'Thursday':
+			$hari_ini = "Kamis";
+		break;
+ 
+		case 'Friday':
+			$hari_ini = "Jumat";
+		break;
+ 
+		case 'Saturday':
+			$hari_ini = "Sabtu";
+		break;
+		
+		default:
+			$hari_ini = "Tidak di ketahui";		
+		break;
+	}
+?> 
   <div class="content-wrapper ">
     <section class="content-header">
       <h3>
-        Data Peminjaman Inventaris Labor
+        Data Peminjaman Ruangan Labor
       </h3>
     </section>
     <!-- Main content -->
@@ -11,16 +53,10 @@
 			<div class="box">
 				<!-- /.box-header -->
 				<div class="box-header">
-					<h3 class="box-title">
-					<?php if($hitungterlambat>0){ ?>
 					<label>
-					<a class="btn-sm btn-info" href="<?php echo base_url("admin/peminjamaninv_notifikasi");?>"><i class="fa fa-send-o "></i> <span>Notifikasi Terlambat</span></a>
+					<a class="btn-sm btn-primary" href="<?php echo base_url("dosen/peminjamanruang_tambah");?>"><i class="fa fa-plus"></i> <span>Tambah Peminjaman Ruangan</span></a>
 					</label>
-					<?php  } ?>
-					<?php if($this->uri->segment(3)=="notif"){ ?>
-						<label><p style="color:red;"><i>Notifikasi sudah dikirim ke Inbox peminjam.</i></p></label>
-					<?php  } ?>
-					</h3>
+					<label>Pilih Tanggal : </label> <label> <?php echo $hari_ini;?>, </label> <label><input type="date" value="<?php echo $date;?>" onchange="handler(event);"></label>
 				</div>
 				<div class="box-body">
 				<table id="datatable" class="table table-bordered table-striped display responsive nowrap" cellspacing="0" width="100%">
@@ -30,9 +66,9 @@
 						<th>ID Peminjaman</th>
 						<th>ID Peminjam</th>
 						<th>Nama Peminjam</th>
-						<th>ID Inventaris</th>
-						<th>Waktu Pinjam</th>
-						<th>Waktu Kembali</th>
+						<th>ID Ruangan</th>
+						<th>Nama Ruangan</th>
+						<th>Waktu</th>
 						<th>Keterangan</th>
 						<th width="150px"> Action</th>
 					</tr>
@@ -59,31 +95,32 @@ var myTable =  $('#datatable').DataTable({
 			"paging": true,
 			"info": true,
 			'order': [[0, 'asc']],
-			"ajax": "<?php echo base_url('admin/get_data_master_peminjamaninv/');?>" ,
+			"ajax": "<?php echo base_url('dosen/get_data_master_peminjamanruang/'.$date);?>" ,
 			columnDefs: [{
 				   targets: [8],
 				   data: null,
 				   render: function ( data, type, row, meta ) {                   
 					if(row[7]=="Menunggu Konfirmasi"){
-						var ubah = "<a href='<?php echo base_url();?>admin/peminjamaninv_ubah/"+row[8]+"/konfirmasi'> <button type='button' class='btn btn-xs btn-warning'><i class='fa fa-pencil'></i> Aksi</button></a>";
-					}else if(row[7]=="Belum Kembali" || row[7]=="Terlambat"){
-						var ubah = "<a href='<?php echo base_url();?>admin/peminjamaninv_ubah/"+row[8]+"/kembali'> <button type='button' class='btn btn-xs btn-success'><i class='fa fa-pencil'></i> Aksi</button></a>";
+						var ubah = "<a href='<?php echo base_url();?>dosen/peminjamanruang_ubah/"+row[8]+"'> <button type='button' class='btn btn-xs btn-warning'><i class='fa fa-pencil'></i> Aksi</button></a>";
 					}else{
 						var ubah = "";
 					}
 					
-					if(row[7]=="Sudah Kembali" || row[7]=="Batal Pinjam"){
-						var hapus = "<a onclick=\"return confirm('Yakin untuk menghapus Peminjaman ini ?')\" href='<?php echo base_url();?>admin/peminjamaninv_aksi_hapus/"+row[8]+"'> <button type='button' class='btn btn-xs btn-danger'><i class='fa fa-trash'></i> Hapus</button></a>";
-					}else{
+					if(row[7]=="Terjadwal"){
 						var hapus = "";
+					}else{
+						var hapus = "<a onclick=\"return confirm('Yakin untuk menghapus Peminjaman ini ?')\" href='<?php echo base_url();?>dosen/peminjamanruang_aksi_hapus/"+row[8]+"/"+row[9]+"'> <button type='button' class='btn btn-xs btn-danger'><i class='fa fa-trash'></i> Hapus</button></a>";
 					}
-
+					
 					return hapus+ubah;
 				   }
 				},],
 		});
-		
 setInterval( function () {
     myTable.ajax.reload();
 }, 4000 );
+
+function handler(e){
+	  window.location.href = '<?php echo base_url()."dosen/peminjamanruang/"; ?>'+e.target.value;
+	}
 </script>

@@ -1,7 +1,7 @@
   <div class="content-wrapper ">
     <section class="content-header">
       <h3>
-        Data Inventaris Labor
+        Data Peminjaman Inventaris Labor
       </h3>
     </section>
     <!-- Main content -->
@@ -11,24 +11,22 @@
 			<div class="box">
 				<!-- /.box-header -->
 				<div class="box-header">
-					<h3 class="box-title">
-					<label>
-					<a class="btn-sm btn-primary" href="<?php echo base_url("admin/inventaris_tambah");?>"><i class="fa fa-plus"></i> <span>Tambah Inventaris</span></a>
-					</label>
-					<label>
-					<a class="btn-sm btn-success" href="<?php echo base_url("admin/kategori");?>"><i class="fa fa-gears"></i> <span>Kategori</span></a>
-					</label>
-					</h3>
+					<h3 class="box-title"><label>
+					<a class="btn-sm btn-primary" href="<?php echo base_url("dosen/peminjamaninv_tambah");?>"><i class="fa fa-plus"></i> <span>Tambah Peminjaman Inventaris</span></a>
+					</label></h3>
 				</div>
 				<div class="box-body">
 				<table id="datatable" class="table table-bordered table-striped display responsive nowrap" cellspacing="0" width="100%">
 					<thead>
 					<tr>
 						<th>No</th>
+						<th>ID Peminjaman</th>
+						<th>ID Peminjam</th>
+						<th>Nama Peminjam</th>
 						<th>ID Inventaris</th>
-						<th>Nama Inventaris</th>
-						<th>Kategori</th>
-						<th>Ketersediaan</th>
+						<th>Waktu Pinjam</th>
+						<th>Waktu Kembali</th>
+						<th>Keterangan</th>
 						<th width="150px"> Action</th>
 					</tr>
 					</thead>
@@ -54,12 +52,23 @@ var myTable =  $('#datatable').DataTable({
 			"paging": true,
 			"info": true,
 			'order': [[0, 'asc']],
-			"ajax": "<?php echo base_url('admin/get_data_master_inventaris/');?>" ,
+			"ajax": "<?php echo base_url('dosen/get_data_master_peminjamaninv/');?>" ,
 			columnDefs: [{
-				   targets: [5],
+				   targets: [8],
 				   data: null,
 				   render: function ( data, type, row, meta ) {                   
-					return "<a href='<?php echo base_url();?>admin/inventaris_ubah/"+row[0]+"'> <button type='button' class='btn btn-xs btn-warning'><i class='fa fa-pencil'></i> Ubah</button></a> <a onclick=\"return confirm('Yakin untuk menghapus Inventaris ini ?')\" href='<?php echo base_url();?>admin/inventaris_aksi_hapus/"+row[0]+"'> <button type='button' class='btn btn-xs btn-danger'><i class='fa fa-trash'></i> Hapus</button></a>";
+					if(row[7]=="Menunggu Konfirmasi"){
+						var ubah = "<a href='<?php echo base_url();?>dosen/peminjamaninv_ubah/"+row[8]+"'> <button type='button' class='btn btn-xs btn-warning'><i class='fa fa-pencil'></i> Aksi</button></a>";
+					}else{
+						var ubah = "";
+					}
+					
+					if(row[7]=="Menunggu Konfirmasi" || row[7]=="Batal Pinjam"){
+						var hapus = "<a onclick=\"return confirm('Yakin untuk menghapus Peminjaman ini ?')\" href='<?php echo base_url();?>dosen/peminjamaninv_aksi_hapus/"+row[8]+"'> <button type='button' class='btn btn-xs btn-danger'><i class='fa fa-trash'></i> Hapus</button></a>";
+					}else{
+						var hapus = "";
+					}
+					return hapus+ubah;
 				   }
 				},],
 		});

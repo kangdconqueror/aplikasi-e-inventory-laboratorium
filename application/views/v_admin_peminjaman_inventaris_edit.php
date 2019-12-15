@@ -22,7 +22,7 @@
 							<tr>
 								<td>ID Peminjam</td>
 								<td>:</td>
-								<td><?php echo $tbl_peminjaman_inventaris->kodepeminjam_user;?></td>
+								<td><?php echo $tbl_peminjaman_inventaris->kodepeminjam_user;?><input type="hidden" name="kodepeminjam_user" value="<?php echo $tbl_peminjaman_inventaris->kodepeminjam_user;?>"></td>
 							</tr>
 							<tr>
 								<td>Nama Peminjam</td>
@@ -32,7 +32,7 @@
 							<tr>
 								<td>ID Inventaris</td>
 								<td>:</td>
-								<td><?php echo $tbl_peminjaman_inventaris->kode_inventaris;?></td>
+								<td><?php echo $tbl_peminjaman_inventaris->kode_inventaris;?><input type="hidden" name="kode_inventaris" value="<?php echo $tbl_peminjaman_inventaris->kode_inventaris;?>"></td>
 							</tr>
 							<tr>
 								<td>Nama Inventaris</td>
@@ -51,11 +51,16 @@
 								<td><input type="text" name="tanggal_peminjaman" class="form-control" value="" /></td>
 							</tr>
 							<tr>
+								<td>Rencana Pengembalian</td>
+								<td>:</td>
+								<td><input type="datetime-local" name="tanggal_kembali" class="form-control" value="" /></td>
+							</tr>
+							<tr>
 								<td>Konfirmasi Peminjaman</td>
 								<td>:</td>
 								<td>
-									<input type="radio" name="konfirmasi_peminjaman" class="flat-red" value="0"  /> Batal Pinjam
-									<input type="radio" name="konfirmasi_peminjaman" class="flat-red" value="1" checked /> Konfirmasi
+									<input type="radio" name="konfirmasi_peminjaman" value="0"  required /> Batal Pinjam
+									<input type="radio" name="konfirmasi_peminjaman" value="1"  required /> Konfirmasi
 								</td>
 							</tr>
 							<?php } ?>
@@ -70,8 +75,8 @@
 								<td>Konfirmasi Peminjaman</td>
 								<td>:</td>
 								<td>
-									<input type="radio" name="konfirmasi_kembali" class="flat-red" value="0"  /> Batal Pinjam
-									<input type="radio" name="konfirmasi_kembali" class="flat-red" value="1"  checked /> Sudah Kembali
+									<input type="radio" name="konfirmasi_peminjaman" value="0" required /> Batal Pinjam
+									<input type="radio" name="konfirmasi_peminjaman" value="2" required /> Sudah Kembali
 								</td>
 							</tr>
 							<?php } ?>

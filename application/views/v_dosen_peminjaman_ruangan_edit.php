@@ -11,7 +11,7 @@
 			<div class="box">
 				<div class="box-body">
 				  <div class="row">
-				  <?php echo form_open_multipart("admin/peminjamanruang_aksi_ubah/$tbl_peminjaman_ruangan->id_peminjaman/$tbl_peminjaman_ruangan->tanggal_peminjaman"); ?>
+				  <?php echo form_open_multipart("dosen/peminjamanruang_aksi_ubah/$tbl_peminjaman_ruangan->id_peminjaman/$tbl_peminjaman_ruangan->tanggal_peminjaman"); ?>
 					<div class="col-md-6">
 						<table class="table table-bordered">
 							<tr>
@@ -22,7 +22,7 @@
 							<tr>
 								<td>ID Peminjam</td>
 								<td>:</td>
-								<td><?php echo $tbl_peminjaman_ruangan->kodepeminjam_user;?><input type="hidden" name="kodepeminjam_user" value="<?php echo $tbl_peminjaman_ruangan->kodepeminjam_user;?>"></td>
+								<td><?php echo $tbl_peminjaman_ruangan->kodepeminjam_user;?></td>
 							</tr>
 							<tr>
 								<td>Nama Peminjam</td>
@@ -58,19 +58,13 @@
 								<td>Konfirmasi Peminjaman</td>
 								<td>:</td>
 								<td>
-									<input type="radio" name="status_peminjaman" class="flat-red" value="2"  /> Batal Pinjam
-									<input type="radio" name="status_peminjaman" class="flat-red" value="1" checked /> Konfirmasi
+									<input type="radio" name="status_peminjaman" value="2"  /> Batal Pinjam
+									<input type="radio" name="status_peminjaman" value="0" checked /> Konfirmasi
 								</td>
 							</tr>
 						</table>
 					  <div class="form-group">
 						<input type="submit" value="Submit" class="btn btn-success">
-					  </div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-						<label>Foto User</label>
-						<img width="220px" class="img img-responsive user-image" src="<?php echo base_url();?>assets/dist/img/avatar/<?php echo $tbl_peminjaman_ruangan->foto_user."?".strtotime("now");?>">
 					  </div>
 					</div>
 					<?php echo form_close(); ?>

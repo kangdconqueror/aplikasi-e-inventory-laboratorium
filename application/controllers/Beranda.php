@@ -12,6 +12,7 @@ class Beranda extends CI_Controller {
 	{
 		$data['tbl_inventaris'] = $this->db->query("select count(a.id_kategori) as jumlah, a.id_kategori, b.nama_kategori from tbl_inventaris a LEFT JOIN tbl_kategori b ON a.id_kategori=b.id_kategori WHERE a.ketersediaan_inventaris='1' GROUP BY a.id_kategori, b.nama_kategori")->result();
 		$data['tbl_ruangan'] = $this->db->query("select * from tbl_ruangan order by id_ruangan ASC")->result();
+		$data['tbl_user'] = $this->db->query("select * from tbl_user where level_user='administrator' order by nama_user ASC")->result();
 		$this->load->view("v_beranda_header");
 		$this->load->view('v_beranda_index',$data);
 		$this->load->view("v_beranda_footer");

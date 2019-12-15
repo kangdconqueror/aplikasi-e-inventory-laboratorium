@@ -54,7 +54,7 @@ $hari = date('l', strtotime($date));
 				<!-- /.box-header -->
 				<div class="box-header">
 					<label>
-					<a class="btn-sm btn-primary" href="<?php echo base_url("admin/peminjamanruang_tambah");?>"><i class="fa fa-plus"></i> <span>Tambah Peminjaman Ruangan</span></a>
+					<a class="btn-sm btn-primary" href="<?php echo base_url("mahasiswa/peminjamanruang_tambah");?>"><i class="fa fa-plus"></i> <span>Tambah Peminjaman Ruangan</span></a>
 					</label>
 					<label>Pilih Tanggal : </label> <label> <?php echo $hari_ini;?>, </label> <label><input type="date" value="<?php echo $date;?>" onchange="handler(event);"></label>
 				</div>
@@ -95,33 +95,32 @@ var myTable =  $('#datatable').DataTable({
 			"paging": true,
 			"info": true,
 			'order': [[0, 'asc']],
-			"ajax": "<?php echo base_url('admin/get_data_master_peminjamanruang/'.$date);?>" ,
+			"ajax": "<?php echo base_url('mahasiswa/get_data_master_peminjamanruang/'.$date);?>" ,
 			columnDefs: [{
 				   targets: [8],
 				   data: null,
 				   render: function ( data, type, row, meta ) {                   
 					if(row[7]=="Menunggu Konfirmasi"){
-						var ubah = "<a href='<?php echo base_url();?>admin/peminjamanruang_ubah/"+row[8]+"'> <button type='button' class='btn btn-xs btn-warning'><i class='fa fa-pencil'></i> Aksi</button></a>";
+						var ubah = "<a href='<?php echo base_url();?>mahasiswa/peminjamanruang_ubah/"+row[8]+"'> <button type='button' class='btn btn-xs btn-warning'><i class='fa fa-pencil'></i> Aksi</button></a>";
 					}else{
 						var ubah = "";
 					}
 					
-					if(row[7]=="Batal"){
-						var hapus = "<a onclick=\"return confirm('Yakin untuk menghapus Peminjaman ini ?')\" href='<?php echo base_url();?>admin/peminjamanruang_aksi_hapus/"+row[8]+"/"+row[9]+"'> <button type='button' class='btn btn-xs btn-danger'><i class='fa fa-trash'></i> Hapus</button></a>";
-					}else{
+					if(row[7]=="Terjadwal"){
 						var hapus = "";
+					}else{
+						var hapus = "<a onclick=\"return confirm('Yakin untuk menghapus Peminjaman ini ?')\" href='<?php echo base_url();?>mahasiswa/peminjamanruang_aksi_hapus/"+row[8]+"/"+row[9]+"'> <button type='button' class='btn btn-xs btn-danger'><i class='fa fa-trash'></i> Hapus</button></a>";
 					}
-
+					
 					return hapus+ubah;
 				   }
 				},],
 		});
-		
 setInterval( function () {
     myTable.ajax.reload();
 }, 4000 );
 
 function handler(e){
-	  window.location.href = '<?php echo base_url()."admin/peminjamanruang/"; ?>'+e.target.value;
+	  window.location.href = '<?php echo base_url()."mahasiswa/peminjamanruang/"; ?>'+e.target.value;
 	}
 </script>

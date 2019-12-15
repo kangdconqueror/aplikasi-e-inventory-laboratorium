@@ -158,13 +158,6 @@ $hari = date('l', strtotime($date));
 		  </section>
 		</div>
   </div>
-  <footer class="main-footer"  style="text-align:center;">
-    <div class="pull-right hidden-xs">
-    </div>
-    <strong><small>Copyright &copy; 2019</small></strong> 
-  </footer>
-  
-
 <script type="text/javascript">        
     function tampilkanwaktu(){         //fungsi ini akan dipanggil di bodyOnLoad dieksekusi tiap 1000ms = 1detik    
 		var waktu = new Date();            //membuat object date berdasarkan waktu saat 
@@ -174,11 +167,11 @@ $hari = date('l', strtotime($date));
 		document.getElementById("clock").innerHTML = (sh.length==1?"0"+sh:sh) + ":" + (sm.length==1?"0"+sm:sm) + ":" + (ss.length==1?"0"+ss:ss);
     }
 	
-	function handler(e){
-	  window.location.href = '<?php echo base_url()."Beranda/index/"; ?>'+e.target.value;
-	}
-	
 	setTimeout(function() {
 	  location.reload();
 	}, 5000);
+
+	function handler(e){
+	  window.location.href = '<?php echo base_url()."dosen/index/"; ?>'+e.target.value;
+	}
 </script>

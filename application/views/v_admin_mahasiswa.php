@@ -74,4 +74,8 @@ var myTable =  $('#datatable').DataTable({
 				   }
 				},],
 		});
+		
+setInterval( function () {
+    myTable.ajax.reload();
+}, 4000 );
 </script>

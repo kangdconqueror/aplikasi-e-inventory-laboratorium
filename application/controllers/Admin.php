@@ -651,6 +651,7 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
     {
 			$where['id_user'] = $id_user;
 			$data['tbl_user'] = $this->m_general->view_by("tbl_user",$where);
+			$tbl_user = $this->m_general->view_by("tbl_user",$where);
 			
 			$kodepeminjam_user = $this->input->post('kodepeminjam_user')[0];
 			$kodepeminjam_user_old = $this->input->post('kodepeminjam_user')[1];
@@ -863,6 +864,7 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
     {
 			$where['id_user'] = $id_user;
 			$data['tbl_user'] = $this->m_general->view_by("tbl_user",$where);
+			$tbl_user = $this->m_general->view_by("tbl_user",$where);
 			
 			$kodepeminjam_user = $this->input->post('kodepeminjam_user')[0];
 			$kodepeminjam_user_old = $this->input->post('kodepeminjam_user')[1];
@@ -1074,6 +1076,7 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
     {
 			$where['id_user'] = $id_user;
 			$data['tbl_user'] = $this->m_general->view_by("tbl_user",$where);
+			$tbl_user = $this->m_general->view_by("tbl_user",$where);
 			
 			$kodepeminjam_user = $this->input->post('kodepeminjam_user')[0];
 			$kodepeminjam_user_old = $this->input->post('kodepeminjam_user')[1];
@@ -1156,7 +1159,8 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
 			CASE 
 				WHEN a.konfirmasi_peminjaman='0' AND a.konfirmasi_kembali='0' THEN 'Menunggu Konfirmasi'
 				WHEN a.konfirmasi_peminjaman='0' AND a.konfirmasi_kembali='1' THEN 'Batal Pinjam'
-				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' THEN 'Belum Kembali'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' AND (UNIX_TIMESTAMP(a.tanggal_kembali) - UNIX_TIMESTAMP() >0) THEN 'Belum Kembali'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' AND (UNIX_TIMESTAMP(a.tanggal_kembali) - UNIX_TIMESTAMP() <0) THEN 'Terlambat'
 				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='1' THEN 'Sudah Kembali'
 			END as keterangan
 			FROM tbl_peminjaman_inventaris a 
@@ -1190,10 +1194,40 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
         );
 	}	
 	
+	public function peminjamaninv_notifikasi()
+    {
+		$url = base_url("notifikasi/check_peminjaman");
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); 
+		curl_exec($curl);
+		curl_close($curl);
+		redirect('admin/peminjamaninv/notif');
+    }
+	
 	public function peminjamaninv()
     {
+		$data['hitungterlambat'] = $this->db->query(" SELECT a.kodepeminjam_user, a.kode_inventaris, 
+			CASE 
+				WHEN a.konfirmasi_peminjaman='0' AND a.konfirmasi_kembali='0' THEN 'Menunggu Konfirmasi'
+				WHEN a.konfirmasi_peminjaman='0' AND a.konfirmasi_kembali='1' THEN 'Batal Pinjam'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' AND (UNIX_TIMESTAMP(a.tanggal_kembali) - UNIX_TIMESTAMP() >0) THEN 'Belum Kembali'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' AND (UNIX_TIMESTAMP(a.tanggal_kembali) - UNIX_TIMESTAMP() <0) THEN 'Terlambat'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='1' THEN 'Sudah Kembali'
+			END as keterangan
+			FROM tbl_peminjaman_inventaris a 
+			LEFT JOIN tbl_inventaris b ON a.kode_inventaris=b.kode_inventaris
+			LEFT JOIN tbl_user c ON a.kodepeminjam_user=c.kodepeminjam_user
+			WHERE (CASE 
+				WHEN a.konfirmasi_peminjaman='0' AND a.konfirmasi_kembali='0' THEN 'Menunggu Konfirmasi'
+				WHEN a.konfirmasi_peminjaman='0' AND a.konfirmasi_kembali='1' THEN 'Batal Pinjam'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' AND (UNIX_TIMESTAMP(a.tanggal_kembali) - UNIX_TIMESTAMP() >0) THEN 'Belum Kembali'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='0' AND (UNIX_TIMESTAMP(a.tanggal_kembali) - UNIX_TIMESTAMP() <0) THEN 'Terlambat'
+				WHEN a.konfirmasi_peminjaman='1' AND a.konfirmasi_kembali='1' THEN 'Sudah Kembali'
+			END)='Terlambat'
+			order by created_peminjaman DESC")->num_rows();
 		$this->load->view("v_admin_header");
-        $this->load->view("v_admin_peminjaman_inventaris");
+        $this->load->view("v_admin_peminjaman_inventaris", $data);
         $this->load->view("v_admin_footer");
     }		
 	
@@ -1215,39 +1249,62 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
 	
 	public function peminjamaninv_aksi_ubah($id_peminjaman)
     {
-			if(isset($_POST['konfirmasi_peminjaman'])){
-				$tanggal_peminjaman = $this->input->post('tanggal_peminjaman');
-				$konfirmasi_peminjaman = $this->input->post('konfirmasi_peminjaman');
-				if($konfirmasi_peminjaman==0){
-					$_POST['konfirmasi_peminjaman'] = 0;
-					$_POST['konfirmasi_kembali'] = 1;
-					$_POST['tanggal_peminjaman'] = NULL;
-				}else{
-					$_POST['konfirmasi_peminjaman'] = 1;
-					$_POST['konfirmasi_kembali'] = 0;
-					$_POST['tanggal_peminjaman'] = $tanggal_peminjaman;
-				}
-			}
-			if(isset($_POST['konfirmasi_kembali'])){
-				$tanggal_kembali = $this->input->post('tanggal_kembali');
-				$konfirmasi_kembali = $this->input->post('konfirmasi_kembali');
-				if($konfirmasi_kembali==0){
+			$konfirmasi_peminjaman = $this->input->post('konfirmasi_peminjaman');
+			$where2['kode_inventaris'] = $_POST['kode_inventaris'];
+			$inventaris = $this->m_general->view_by("tbl_inventaris",$where2);
+					
+			if($konfirmasi_peminjaman==0){
 					$_POST['konfirmasi_peminjaman'] = 0;
 					$_POST['konfirmasi_kembali'] = 1;
 					$_POST['tanggal_peminjaman'] = NULL;
 					$_POST['tanggal_kembali'] = NULL;
-				}else{
+					$ketersediaan_inventaris = 1;
+					$pesan = "Peminjaman Inventaris { $inventaris->kode_inventaris } { $inventaris->nama_inventaris } telah dibatalkan oleh admin, Terimakasih.";
+			}else if($konfirmasi_peminjaman==1){
+					$_POST['konfirmasi_peminjaman'] = 1;
+					$_POST['konfirmasi_kembali'] = 0;
+					$tanggal_peminjaman = $this->input->post('tanggal_peminjaman');
+					$_POST['tanggal_peminjaman'] = $tanggal_peminjaman;
+					$_POST['tanggal_kembali'] = $this->input->post('tanggal_kembali');
+					$ketersediaan_inventaris = 0;
+					$pesan = "Peminjaman Inventaris { $inventaris->kode_inventaris } { $inventaris->nama_inventaris } telah dikonfirmasi oleh admin, mohon untuk mengembalikan sesuai jadwal yang telah ditentukan, Terimakasih.";
+			}else if($konfirmasi_peminjaman==2){
+					$tanggal_kembali = $this->input->post('tanggal_kembali');
 					$_POST['konfirmasi_peminjaman'] = 1;
 					$_POST['konfirmasi_kembali'] = 1;
 					$_POST['tanggal_kembali'] = $tanggal_kembali;
-				}
+					$ketersediaan_inventaris = 1;
+					$pesan = "Anda sudah mengembalikan peminjaman  inventaris { $inventaris->kode_inventaris } { $inventaris->nama_inventaris }, Terimakasih.";
 			}
+			
+			$id_inbox = $this->m_general->bacaidterakhir("tbl_inbox", "id_inbox");
+						$inbox = array(
+						'id_inbox' => $id_inbox,
+						'isi_inbox' => $pesan,
+						'kodepeminjam_user' => $_POST['kodepeminjam_user']
+						);
+			$this->m_general->add("tbl_inbox", $inbox);
+				
 			$where['id_peminjaman'] = $id_peminjaman;
+			$tbl_peminjaman_inventaris = $this->m_general->view_by("tbl_peminjaman_inventaris",$where);
 			$this->m_general->edit("tbl_peminjaman_inventaris", $where, $_POST);
+			
+			//update tabel inventaris untuk inventaris yang dipinjam menjadi status ketersediannya 0
+			$where2['kode_inventaris'] = $tbl_peminjaman_inventaris->kode_inventaris;
+			$data = array(
+				'ketersediaan_inventaris'=>$ketersediaan_inventaris
+			);
+			$this->m_general->edit("tbl_inventaris", $where2, $data);			
 			redirect('admin/peminjamaninv');
     }	
 	public function peminjamaninv_aksi_hapus($id_peminjaman){
 			$where['id_peminjaman'] = $id_peminjaman;
+			$tbl_peminjaman_inventaris = $this->m_general->view_by("tbl_peminjaman_inventaris",$where);
+			$where2['kode_inventaris'] = $tbl_peminjaman_inventaris->kode_inventaris;
+			$data = array(
+				'ketersediaan_inventaris'=>1
+			);
+			$this->m_general->edit("tbl_inventaris", $where2, $data);
 			$this->m_general->hapus("tbl_peminjaman_inventaris", $where); // Panggil fungsi hapus() yang ada di m_general.php
 			redirect('admin/peminjamaninv');
 	}
@@ -1357,6 +1414,24 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
     {
 			$where['id_peminjaman'] = $id_peminjaman;
 			$this->m_general->edit("tbl_peminjaman_ruangan", $where, $_POST);
+			
+			$where2['kode_ruangan'] = $_POST['kode_ruangan'];
+			$ruangan = $this->m_general->view_by("tbl_ruangan",$where2);
+				
+			if($_POST['status_peminjaman']==1){
+				$pesan = "Peminjaman Ruangan { $ruangan->kode_ruangan } { $ruangan->nama_ruangan } telah dikonfirmasi oleh admin, Terimakasih.";
+			}else if($_POST['status_peminjaman']==2){
+				$pesan = "Peminjaman Ruangan { $ruangan->kode_ruangan } { $ruangan->nama_ruangan } telah dibatalkan oleh admin, Terimakasih.";
+			}
+			
+			$id_inbox = $this->m_general->bacaidterakhir("tbl_inbox", "id_inbox");
+			$inbox = array(
+					'id_inbox' => $id_inbox,
+					'isi_inbox' => $pesan,
+					'kodepeminjam_user' => $_POST['kodepeminjam_user']
+			);
+			$this->m_general->add("tbl_inbox", $inbox);
+			
 			redirect('admin/peminjamanruang/'.$tanggal_peminjaman);
     }	
 	public function peminjamanruang_aksi_hapus($id_peminjaman, $tanggal_peminjaman){
