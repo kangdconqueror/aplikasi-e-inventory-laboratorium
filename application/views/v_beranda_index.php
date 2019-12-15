@@ -161,7 +161,7 @@ $hari = date('l', strtotime($date));
   <footer class="main-footer"  style="text-align:center;">
     <div class="pull-right hidden-xs">
     </div>
-    <strong><small>Copyright &copy; 2019</small></strong> 
+    <strong><small>Labor Komputer FASILKOM - UNILAK 2020</small></strong> 
   </footer>
   
 
