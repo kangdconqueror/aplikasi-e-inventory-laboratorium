@@ -7,6 +7,7 @@ class Admin extends CI_Controller {
 		if($this->session->userdata('status') != "login" or $this->session->userdata('level') != "administrator"){
 			redirect(base_url("login"));
 		}
+		date_default_timezone_set("Asia/Bangkok");
 		$this->load->model('m_general');
 	}
 	
