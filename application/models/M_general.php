@@ -22,11 +22,15 @@ class M_general extends CI_Model {
 	}
 	
 	public function bacaidterakhir($table, $id){
-		$this->db->select("($id*1) as $id");
-		$this->db->order_by("$id DESC");
-		$this->db->limit(1);
-		$hasil = $this->db->get($table)->row();
-		return $hasil->$id+1;
+		$query = $this->db->query("select $id+1 as $id from $table order by $id DESC LIMIT 1");
+		if($query->num_rows() > 0){
+			$query2 = $query->row();
+			$idnya = $query2->$id;
+		}else{
+			$idnya = "1";
+		}
+		
+		return $idnya;
 	}
 	
 	public function view($table){
