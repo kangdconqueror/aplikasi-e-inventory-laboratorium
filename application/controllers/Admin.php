@@ -693,6 +693,8 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
 			
 			$kodepeminjam_user = $this->input->post('kodepeminjam_user')[0];
 			$kodepeminjam_user_old = $this->input->post('kodepeminjam_user')[1];
+			$user_name = $this->input->post('user_name')[0];
+			$user_name_old = $this->input->post('user_name')[1];
 			$user_password = $this->input->post('user_password')[0];
 			$user_password_old = $this->input->post('user_password')[1];
 			$nama_user = $this->input->post('nama_user');
@@ -711,7 +713,15 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
 				$_POST['kodepeminjam_user'] = $kodepeminjam_user;
 			}
 			
-			if($check_user==0){
+			if($user_name!=$user_name_old){
+				$check_username = $this->m_general->countdata("tbl_user", array("user_name" => $user_name));
+				$_POST['user_name'] = $user_name;
+			}else{
+				$check_username = 0;
+				$_POST['user_name'] = $user_name;
+			}
+			
+			if($check_user==0 && $check_username==0){
 				if($user_password!=$user_password_old){
 					$_POST['user_password'] = md5($user_password);
 				}else{
@@ -734,8 +744,14 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
 					$this->m_general->edit("tbl_user", $where, $_POST);
 					redirect('admin/administrator');
 			}else{
-					$data['err'] = 1;
+					if($check_user>0){
+						$data['err'] = 1;
+					}
+					if($check_username>0){
+						$data['err'] = 2;
+					}
 					$data['kodepeminjam_user'] = $kodepeminjam_user;
+					$data['user_name'] = $user_name;
 					$data['user_password'] = $user_password;
 					$data['nama_user'] = $nama_user;
 					$data['tempatlahir_user'] = $tempatlahir_user;

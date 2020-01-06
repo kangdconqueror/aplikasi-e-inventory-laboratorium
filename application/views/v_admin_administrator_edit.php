@@ -14,8 +14,9 @@
 						<span>Silahkan melengkapi form berikut</span>
 					</h3>
 					<?php 
-					if($err==1){
+					if($err>1){
 							$kodepeminjam_user = $kodepeminjam_user;
+							$user_name = $user_name;
 							$nama_user = $nama_user;
 							$tempatlahir_user = $tempatlahir_user;
 							$tanggallahir_user = $tanggallahir_user;
@@ -23,11 +24,21 @@
 							$alamat_user = $alamat_user;
 							$sangsipeminjaman_user = $sangsipeminjaman_user;
 							$user_password = $user_password;
+						if($err==1){
 					?>
 						<p style="color:red;"><i>ID Admin sudah digunakan, silahkan coba yang lain.</i></p>
 					<?php 
+						}
+						
+						if($err==2){
+					?>
+						<p style="color:red;"><i>Username sudah digunakan, silahkan coba yang lain.</i></p>
+					<?php 
+						}
+					
 					}else{
 							$kodepeminjam_user = $tbl_user->kodepeminjam_user;
+							$user_name = $tbl_user->user_name;
 							$nama_user = $tbl_user->nama_user;
 							$tempatlahir_user = $tbl_user->tempatlahir_user;
 							$tanggallahir_user = $tbl_user->tanggallahir_user;
@@ -45,6 +56,11 @@
 						<label>ID Admin</label>
 						<input type="text" class="form-control" name="kodepeminjam_user[]" placeholder="NIM Mahasiswa" value="<?php echo $kodepeminjam_user;?>" required>
 						<input type="hidden" name="kodepeminjam_user[]" value="<?php echo $tbl_user->kodepeminjam_user;?>" >
+					  </div>
+					  <div class="form-group">
+						<label>Username</label>
+						<input type="text" class="form-control" name="user_name[]" placeholder="Username" value="<?php echo $user_name;?>" required>
+						<input type="hidden" name="user_name[]" value="<?php echo $tbl_user->user_name;?>" >
 					  </div>
 					  <div class="form-group">
 						<label>Password</label>
