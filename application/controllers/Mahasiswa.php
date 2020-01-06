@@ -85,7 +85,7 @@ class Mahasiswa extends CI_Controller {
 					echo "</script>";
 			}else{
 					$data['err'] = 1;
-					$data['kodepeminjam_user'] = $kodepeminjam_user;
+					$data['user_name'] = $user_name;
 					$data['user_password'] = $user_password;
 					$data['nama_user'] = $nama_user;
 					$data['tempatlahir_user'] = $tempatlahir_user;
