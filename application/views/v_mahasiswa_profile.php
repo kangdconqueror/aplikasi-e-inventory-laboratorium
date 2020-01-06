@@ -15,7 +15,7 @@
 					</h3>
 					<?php 
 					if($err==1){
-							$kodepeminjam_user = $kodepeminjam_user;
+							$user_name = $user_name;
 							$nama_user = $nama_user;
 							$tempatlahir_user = $tempatlahir_user;
 							$tanggallahir_user = $tanggallahir_user;
@@ -23,10 +23,10 @@
 							$alamat_user = $alamat_user;
 							$user_password = $user_password;
 					?>
-						<p style="color:red;"><i>ID Dosen sudah digunakan, silahkan coba yang lain.</i></p>
+						<p style="color:red;"><i>Username sudah digunakan, silahkan coba yang lain.</i></p>
 					<?php 
 					}else{
-							$kodepeminjam_user = $tbl_user->kodepeminjam_user;
+							$user_name = $tbl_user->user_name;
 							$nama_user = $tbl_user->nama_user;
 							$tempatlahir_user = $tbl_user->tempatlahir_user;
 							$tanggallahir_user = $tbl_user->tanggallahir_user;
@@ -40,9 +40,9 @@
 				  <?php echo form_open_multipart("mahasiswa/profile_aksi_ubah/$tbl_user->id_user"); ?>
 					<div class="col-md-4">
 					  <div class="form-group">
-						<label>ID Dosen</label>
-						<input type="text" class="form-control" name="kodepeminjam_user[]" placeholder="NIM Mahasiswa" value="<?php echo $kodepeminjam_user;?>" required>
-						<input type="hidden" name="kodepeminjam_user[]" value="<?php echo $tbl_user->kodepeminjam_user;?>" >
+						<label>Username</label>
+						<input type="text" class="form-control" name="user_name[]" placeholder="NIM Mahasiswa" value="<?php echo $user_name;?>" required>
+						<input type="hidden" name="user_name[]" value="<?php echo $tbl_user->user_name;?>" >
 					  </div>
 					  <div class="form-group">
 						<label>Password</label>
@@ -50,8 +50,8 @@
 						<input type="hidden" name="user_password[]" value="<?php echo $tbl_user->user_password;?>" >
 					  </div>
 					  <div class="form-group">
-						<label>Nama Dosen</label>
-						<input type="text" class="form-control" name="nama_user" placeholder="Nama Dosen" value="<?php echo $nama_user;?>" required>
+						<label>Nama Mahasiswa</label>
+						<input type="text" class="form-control" name="nama_user" placeholder="Nama Mahasiswa" value="<?php echo $nama_user;?>" required>
 					  </div>
 					  <div class="form-group">
 						<label>Tempat Lahir</label>

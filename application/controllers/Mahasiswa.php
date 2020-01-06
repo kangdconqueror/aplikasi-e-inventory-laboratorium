@@ -39,8 +39,8 @@ class Mahasiswa extends CI_Controller {
 			$data['tbl_user'] = $this->m_general->view_by("tbl_user",$where);
 			$tbl_user = $this->m_general->view_by("tbl_user",$where);
 			
-			$kodepeminjam_user = $this->input->post('kodepeminjam_user')[0];
-			$kodepeminjam_user_old = $this->input->post('kodepeminjam_user')[1];
+			$user_name = $this->input->post('user_name')[0];
+			$user_name_old = $this->input->post('user_name')[1];
 			$user_password = $this->input->post('user_password')[0];
 			$user_password_old = $this->input->post('user_password')[1];
 			$nama_user = $this->input->post('nama_user');
@@ -50,12 +50,12 @@ class Mahasiswa extends CI_Controller {
 			$alamat_user = $this->input->post('alamat_user');
 			$foto_user = $this->input->post('foto_user');
 			
-			if($kodepeminjam_user!=$kodepeminjam_user_old){
-				$check_user = $this->m_general->countdata("tbl_user", array("kodepeminjam_user" => $kodepeminjam_user));
-				$_POST['kodepeminjam_user'] = $kodepeminjam_user;
+			if($user_name!=$user_name_old){
+				$check_user = $this->m_general->countdata("tbl_user", array("user_name" => $user_name));
+				$_POST['user_name'] = $user_name;
 			}else{
 				$check_user = 0;
-				$_POST['kodepeminjam_user'] = $kodepeminjam_user;
+				$_POST['user_name'] = $user_name;
 			}
 			
 			if($check_user==0){
@@ -77,7 +77,6 @@ class Mahasiswa extends CI_Controller {
 					}else{
 						$_POST['foto_user'] = $foto_user;
 					}
-					$_POST['user_name'] = $kodepeminjam_user;
 					$this->m_general->edit("tbl_user", $where, $_POST);
 					$url = base_url("mahasiswa/profile");
 					echo "<script language='javascript'>";
