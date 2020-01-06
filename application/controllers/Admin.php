@@ -740,7 +740,6 @@ END) DAY)) - UNIX_TIMESTAMP() ) < 0 THEN 0
 					}else{
 						$_POST['foto_user'] = $foto_user;
 					}
-					$_POST['user_name'] = $kodepeminjam_user;
 					$this->m_general->edit("tbl_user", $where, $_POST);
 					redirect('admin/administrator');
 			}else{
