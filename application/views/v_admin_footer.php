@@ -18,7 +18,7 @@
 		var sm = waktu.getMinutes() + "";  //memunculkan nilai detik    
 		var ss = waktu.getSeconds() + "";  //memunculkan jam:menit:detik dengan menambahkan angka 0 jika angkanya cuma satu digit (0-9)
 		var hari = waktu.getDate();
-		var bulan = waktu.getMonth() ;
+		var bulan = waktu.getMonth()+1 ;
 		var tahun = waktu.getFullYear();
 		document.getElementById("clock").innerHTML = (sh.length==1?"0"+sh:sh) + ":" + (sm.length==1?"0"+sm:sm) + ":" + (ss.length==1?"0"+ss:ss);
 		document.getElementById("clock2").innerHTML = (sh.length==1?"0"+sh:sh) + ":" + (sm.length==1?"0"+sm:sm) + ":" + (ss.length==1?"0"+ss:ss);
